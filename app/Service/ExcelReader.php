@@ -4,6 +4,8 @@
 namespace App\Service;
 
 
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+
 class ExcelReader
 {
     private $xlsx;
@@ -33,19 +35,19 @@ class ExcelReader
         $this->xlsx->setActiveSheetIndex($numSheet);
         $oCells = $this->xlsx->getActiveSheet()->getCellCollection();
         for ($iRow = 1; $iRow <= $oCells->getHighestRow(); $iRow++) {
-            $ordCount = 65; //ord('A') = 65
+            $ordCount = 1;
             foreach ($arr as $value) {
-                $cell = $oCells->get(chr($ordCount) . $iRow);
+                $cell = $oCells->get(Coordinate::stringFromColumnIndex($ordCount) . $iRow);
                 if (is_null($cell)) {
-                    throw new \Exception((chr($ordCount) . $iRow) . ' - empty, sheet - ' . $numSheet);
+                    throw new \Exception((Coordinate::stringFromColumnIndex($ordCount) . $iRow) . ' - empty, sheet - ' . $numSheet);
                 } else {
                     $cell = $cell->getValue();
                     $res[$value] = $cell;
                     $ordCount++;
                 }
-                if($value == end($arr)){
+                if ($value == end($arr)) {
                     $obj = new $model();
-                    foreach ($arr as $prop){
+                    foreach ($arr as $prop) {
                         $obj->$prop = $res[$prop];
                     }
                     yield $obj;

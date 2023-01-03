@@ -39,7 +39,7 @@ class ExcelController extends Controller
                 }
             }
             if (isset($transactionIdsNotFound)) {
-                return $this->excelError('id - ' . implode($transactionIdsNotFound) . 'transaction not found user');
+                return $this->response->render('excel.error', 'id - ' . implode($transactionIdsNotFound) . 'transaction not found user');
             }
             
             //calculate
